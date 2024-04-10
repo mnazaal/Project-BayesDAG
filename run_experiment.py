@@ -7,7 +7,12 @@ import os
 import sys
 from typing import List
 
-from evaluation_pipeline.aml_run_context import setup_run_context_in_aml
+try:
+    from evaluation_pipeline.aml_run_context import setup_run_context_in_aml
+    aml = True
+except ImportError:
+    from src.causica.experiment.run_context import RunContext
+    aml = False
 from open_source.causica.run_experiment import get_parser, run_experiment_on_parsed_args, validate_args
 
 
@@ -58,11 +63,14 @@ def main(user_args):
     # TODO: find cleaner way of doing it
     args.default_configs_dir = os.path.join("src", "configs")
     # Prepare AML context
-    run_context = setup_run_context_in_aml(
-        args.aml_experiment_name,
-        compute_target=args.compute_target,
-        aml_config_filename=args.aml_config_filename,
-    )
+    if aml:
+        run_context = setup_run_context_in_aml(
+            args.aml_experiment_name,
+            compute_target=args.compute_target,
+            aml_config_filename=args.aml_config_filename,
+        )
+    else:
+        run_context = RunContext()
 
     run_experiment_on_parsed_args(args=args, run_context=run_context)
 
