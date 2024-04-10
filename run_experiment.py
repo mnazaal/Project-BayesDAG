@@ -13,7 +13,7 @@ try:
 except ImportError:
     from src.causica.experiment.run_context import RunContext
     aml = False
-from open_source.causica.run_experiment import get_parser, run_experiment_on_parsed_args, validate_args
+from src.causica.run_experiment import get_parser, run_experiment_on_parsed_args, validate_args
 
 
 def get_parser_with_aml_args() -> argparse.ArgumentParser:
